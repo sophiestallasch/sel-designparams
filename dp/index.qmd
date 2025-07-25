@@ -31,8 +31,13 @@ library(DT)
 
 ```{r}
 #| echo: false
-load("../data/dp_pe.pub.rda")
-load("../data/dp_ma.pub.rda")
+if (interactive()) {
+  load("../data/dp_pe.pub.rda")
+  load("../data/dp_ma.pub.rda")
+} else {
+  load(url("https://raw.githubusercontent.com/sophiestallasch/sel-designparams/main/data/dp_pe.pub.rda"))
+  load(url("https://raw.githubusercontent.com/sophiestallasch/sel-designparams/main/data/dp_ma.pub.rda"))
+}
 ```
 
 

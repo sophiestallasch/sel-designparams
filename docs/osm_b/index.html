@@ -274,8 +274,9 @@ div.csl-indent {
 Moreover, the team intends to take into account the statistical uncertainty associated with the estimated design parameters. For this purpose, the researchers determine conservative upper/liberal lower bounds for the <em>MRSS</em> by drawing on the respective lower/upper bound estimates of the 95% CIs of the meta-analytic averages of <em>R</em><sup>2</sup><sub>Total</sub>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load meta-analytic summaries</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"../data/dp_ma.pub.rda"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="fu">url</span>(<span class="st">"https://raw.githubusercontent.com/sophiestallasch/sel-designparams/main/data/dp_ma.pub.rda"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>If you encounter any issues, <a href="https://github.com/sophiestallasch/sel-designparams/raw/main/data/dp_ma.pub.rda">click here to download the .rda file</a> and load it manually into R.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dp_1l <span class="ot">&lt;-</span> dp_ma <span class="sc">%&gt;%</span> </span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># select relevant design parameters</span></span>
@@ -560,8 +561,9 @@ Again, the researchers allow for the statistical uncertainty associated with the
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load point estimates</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"../data/dp_pe.pub.rda"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="fu">url</span>(<span class="st">"https://raw.githubusercontent.com/sophiestallasch/sel-designparams/main/data/dp_pe.pub.rda"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>If you encounter any issues, <a href="https://github.com/sophiestallasch/sel-designparams/raw/main/data/dp_pe.pub.rda">click here to download the .rda file</a> and load it manually into R.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>dp_3l <span class="ot">&lt;-</span> dp_pe <span class="sc">%&gt;%</span> </span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># select relevant design parameters</span></span>

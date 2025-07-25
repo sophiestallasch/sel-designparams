@@ -78,6 +78,17 @@ describe_max <- function(data, col, stat = "N", ref = TRUE) {
 ```
 
 
+```{r}
+#| echo: false
+if (interactive()) {
+  load("../data/dp_pe.pub.rda")
+  load("../data/dp_ma.pub.rda")
+} else {
+  load(url("https://raw.githubusercontent.com/sophiestallasch/sel-designparams/main/data/dp_pe.pub.rda"))
+  load(url("https://raw.githubusercontent.com/sophiestallasch/sel-designparams/main/data/dp_ma.pub.rda"))
+}
+```
+
 ### Assumptions
 
 For each scenario, we assume a balanced design where students (Scenario 1) or schools (Scenario 2) are randomly assigned to experimental conditions in equal shares (i.e., 50% of the sample in the treatment group and 50% in the control group). Further, we set the desired power at 80% (1-β = 0.80) and use a two-tailed test with Type I error rate of 5% (α = 0.05) which allows testing of potentially unexpected negative effects of the intervention on the outcome. Note that these assumptions correspond to the default settings in PowerUpR.
@@ -136,10 +147,11 @@ Moreover, the team intends to take into account the statistical uncertainty asso
 
 
 ```{r}
+#| eval: false
 # load meta-analytic summaries
-load("../data/dp_ma.pub.rda")
+load(url("https://raw.githubusercontent.com/sophiestallasch/sel-designparams/main/data/dp_ma.pub.rda"))
 ```
-
+If you encounter any issues, [click here to download the .rda file](https://github.com/sophiestallasch/sel-designparams/raw/main/data/dp_ma.pub.rda) and load it manually into R.
 
 ```{r}
 dp_1l <- dp_ma %>% 
@@ -278,9 +290,11 @@ K_3l = 80           # Number of schools
 
 
 ```{r}
+#| eval: false
 # load point estimates
-load("../data/dp_pe.pub.rda")
+load(url("https://raw.githubusercontent.com/sophiestallasch/sel-designparams/main/data/dp_pe.pub.rda"))
 ```
+If you encounter any issues, [click here to download the .rda file](https://github.com/sophiestallasch/sel-designparams/raw/main/data/dp_pe.pub.rda) and load it manually into R.
 
 
 ```{r}
