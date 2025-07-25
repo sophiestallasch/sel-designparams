@@ -1,0 +1,473 @@
+---
+title: "OSM B: Application"
+---
+
+
+This demo presents two scenarios illustrating how our design parameters are applied in power analyses when planning randomized intervention studies on students’ SEL outcomes. We demonstrate how to determine
+
+1. the minimum required sample size (MRSS), illustrated by the example of a single-level individually randomized trial (IRT)
+2. the minimum detectable effect size (MDES), illustrated by the example of a three-level cluster randomized trial (CRT)  
+
+
+## Prerequisites
+
+### R Setup
+
+We showcase power analysis in R using the package PowerUpR [@bulusPowerUpRPowerAnalysis2021]. It implements the power formulas given in Dong and Maynard [-@dongPowerUpToolCalculating2013]. Specifically, we use the functions `mrss.ira()` to calculate the *MRSS* in Scenario 1 and `mdes.cra3()` to calculate the *MDES* in Scenario 2 for the main treatment effect. Researchers may also use the companion [PowerUpR shiny app](https://powerupr.shinyapps.io/index/) [@atanekaPowerUpRShinyApp2023] or the Excel tool [PowerUp!](https://www.causalevaluation.org/power-analysis.html) [@dongPowerUpToolPower2015]. Note that there are several other appropriate software solutions for planning IRTs and CRTs, such as [Optimal Design](https://wtgrantfoundation.org/optimal-design-with-empirical-information-od) [@spybrookOptimalDesignEmpirical2011].
+
+  
+
+
+```{r}
+#| warning: false
+#| output: false
+
+# -- Load packages
+
+# Data handling
+library(dplyr)
+library(tidyr)
+library(purrr)
+
+# Table processing and plotting
+library(knitr)
+library(ggplot2)
+
+# Power analysis 
+library(PowerUpR)
+```
+
+
+```{r}
+#| echo: false
+
+# Setup-Chunk: Automatic reporting functions ---INTERNAL ONLY---
+describe_range <- function(data, col, stat = "N", set = NULL) {
+  if (!is.null(set)) {
+    data <- dplyr::filter(data, Set == set)
+  }
+  min_val <- min(data[[col]], na.rm = TRUE)
+  max_val <- max(data[[col]], na.rm = TRUE)
+  
+  min_val <- if (min_val %% 1 == 0) as.character(min_val) else sprintf("%.2f", min_val)
+  max_val <- if (max_val %% 1 == 0) as.character(max_val) else sprintf("%.2f", max_val)
+  
+  suffix <- if (!is.null(set)) paste0(" when controlling for Set ", set) else ""
+  glue::glue("{min_val} ≤ *{stat}* ≤ {max_val}{suffix}")
+}
+
+describe_min <- function(data, col, stat = "N", ref = TRUE) {
+  min_row <- dplyr::slice_min(data, !!rlang::sym(col), n = 1)
+  val <- min_row[[col]]
+  
+  val <- if (val %% 1 == 0) as.character(val) else sprintf("%.2f", val)
+  
+  suffix <- if (ref) glue::glue(" ({min_row$Method}, {min_row$Set})") else ""
+  glue::glue("*{stat}* = {val}{suffix}")
+}
+
+describe_max <- function(data, col, stat = "N", ref = TRUE) {
+  max_row <- dplyr::slice_max(data, !!rlang::sym(col), n = 1)
+  val <- max_row[[col]]
+  
+  val <- if (val %% 1 == 0) as.character(val) else sprintf("%.2f", val)
+  
+  suffix <- if (ref) glue::glue(" ({max_row$Method}, {max_row$Set})") else ""
+  glue::glue("*{stat}* = {val}{suffix}")
+}
+```
+
+
+### Assumptions
+
+For each scenario, we assume a balanced design where students (Scenario 1) or schools (Scenario 2) are randomly assigned to experimental conditions in equal shares (i.e., 50% of the sample in the treatment group and 50% in the control group). Further, we set the desired power at 80% (1-β = 0.80) and use a two-tailed test with Type I error rate of 5% (α = 0.05) which allows testing of potentially unexpected negative effects of the intervention on the outcome. Note that these assumptions correspond to the default settings in PowerUpR.
+
+
+## Scenario 1: IRT
+
+:::{.scenario-subtitle}
+A lab-based IRT on outcomes across multiple contexts and domains in elementary school
+:::
+
+A research team has developed an universal intervention to promote elementary students’ SEL outcomes across multiple contexts and domains. The team plans a single-level lab-based randomized experiment to test whether the new approach is effective under controlled lab conditions across different assessment methods. 
+
+The researchers expect a treatment effect of a size typically reported for previous randomized experiments on SEL outcomes. The meta-analysis by Wilson et al. (2025, Table 2) suggests that the average standardized mean differences (*SMD*) across social and behavioral outcomes lie in the range 0.07 ≤ *SMD* ≤ 0.35, with a median of *Mdn*(*SMD*) = 0.22. The research team therefore considers a treatment effect of this size on students’ SEL outcomes plausible and meaningful. 
+The researchers thus conduct power analyses to determine the required number of students that should be sampled to ensure their IRT can detect a minimum detectable effect size of *MDES* = 0.22 (with 1-β = 0.80 and α = 0.05 in a two-tailed test).  
+
+```{r}
+# set the MDES
+es_1l <- .22
+```
+
+
+
+#### Baseline Design without Covariates
+
+In a first setup, the research team considers a design without covariates.  
+
+```{r}
+# apply PowerUpR::mrss.ira()
+mrss.ira(
+  es=es_1l,          # MDES
+  power=.80,         # Power; default: 80%
+  alpha=.05,         # Probability of Type I error; default: 5% 
+  two.tailed=TRUE,   # Hypothesis test; default: two-tailed
+  p=.50,             # Proportion of students in the treatment group; default: 50%
+  n0=10,             # Starting value for finding the sample size; default: 10
+  tol=.10,           # Tolerance of iterations for finding the sample size; default: 0.1
+  g1=0,              # Number of covariates; default: 0
+  r21=0              # Proportion of explained variance by covariates; default: 0
+  )
+```
+
+```{r}
+#| echo: false
+#| output: false
+d_1l.0 <- mrss.ira(es=es_1l)
+```
+
+The *MRSS* equals `r d_1l.0$n`. Therefore, in total, *N* = `r d_1l.0$n` students are required to achieve *MDES* = 0.22 when omitting covariates. Hence, the researchers would have to randomly assign *n* = `r round(d_1l.0$n/2, 0)` students to the treatment group and *n* = `r round(d_1l.0$n/2, 0)` students to the control group.
+
+
+#### Designs with Covariates
+
+In a second setup, the research team would like to test the impact of different covariate sets (in terms of *R*^2^~Total~) on the required sample size. Because the intervention targets SEL outcomes across multiple domains and contexts (as opposed to a specific measure), the researchers rely on the meta-analytic summaries of the design parameters. Specifically, they consult the results of MA-1 with student self-reports, parent reports, and teacher reports in elementary school. (Note that design parameters are not available for teacher reports in Model Set 2-BL and Model Set 3-SD+BL.)  
+Moreover, the team intends to take into account the statistical uncertainty associated with the estimated design parameters. For this purpose, the researchers determine conservative upper/liberal lower bounds for the *MRSS* by drawing on the respective lower/upper bound estimates of the 95% CIs of the meta-analytic averages of *R*^2^~Total~. 
+
+
+```{r}
+# load meta-analytic summaries
+load("../data/dp_ma.pub.rda")
+```
+
+
+```{r}
+dp_1l <- dp_ma %>% 
+  # select relevant design parameters
+  filter(Type == "MA-1", 
+         Population == "Total",
+         Design == "1L-D",
+         Edu.level == "Elementary") %>% 
+  
+  # select relevant columnns
+  select(Method, Set, n_Covariates, Parameter, Average, starts_with("CI"))
+```
+
+Table 1 shows all design parameters applied in the power analyses.
+
+```{r}
+#| code-fold: true
+#| label: tbl-dp_1l
+#| tbl-cap: Design Parameters for Scenario 1
+
+# inspect selected design parameters
+kable(dp_1l %>% 
+        mutate(across(c(Average:CI.ub), ~sprintf("%.2f", .))))
+```
+
+Using these estimates, the research team systematically studies how the various covariate sets influence the *MRSS*.
+
+```{r}
+#| warning: false 
+# prepare database
+dp_1l <- dp_1l %>% 
+  pivot_longer(c(Average:CI.ub), 
+               names_to = "statistic", values_to = "r2_total")
+```
+
+
+```{r}
+#| warning: false 
+#| output: false
+
+# custom function to vectorize PowerUpR::mrss.ira() across varying model sets
+vectorize_mrss.ira <- function(g1, r21, ...) {
+  parms <- list(es = es_1l, g1 = g1, r21 = r21)
+  d_out <- exec(getFromNamespace("mrss.ira", ns = "PowerUpR"), !!!parms)
+  d_out$n
+}
+
+# apply vectorize_mrss.ira()
+d_1l <- dp_1l %>% 
+  mutate(mrss = map2_dbl(n_Covariates, r2_total, vectorize_mrss.ira))
+```
+
+```{r}
+#| warning: false
+# clean and reshape results 
+d_1l <- d_1l %>% 
+  select(Method, Set, statistic, mrss) %>% 
+  mutate(statistic = case_match(statistic,
+                                "Average" ~ "MRSS",
+                                "CI.lb"   ~ "MRSS conservative",
+                                "CI.ub"   ~ "MRSS liberal")) %>%
+  pivot_wider(names_from = statistic, values_from = mrss) %>% 
+  arrange(Method, Set)
+```
+
+
+Table 2 lists the results; Figure 1 visualizes them.
+
+::: {.grid style="gap: 4rem;"}
+::: {.g-col-6}
+```{r}
+#| code-fold: true
+#| label: tbl-d_1l
+#| tbl-cap: MRSS for Different Covariate Sets by Assessment Method
+
+# show results
+kable(d_1l)
+```
+:::
+::: {.g-col-6}
+```{r}
+#| code-fold: true
+#| label: fig-d_1l
+#| fig-cap: MRSS (with conservative/liberal bounds) for Different Covariate Sets by Assessment Method
+#| cap-location: top
+#| fig-height: 2.9
+
+ggplot(d_1l, aes(x = Set, y = MRSS, fill = Method)) +
+  geom_hline(yintercept = d_1l.0$n, linetype = "dashed") + 
+  geom_col(position = position_dodge(width = 0.8, preserve = "single"), width = 0.7) +
+  geom_errorbar(
+    aes(ymin = `MRSS conservative`, ymax = `MRSS liberal`),
+    position = position_dodge(width = 0.8, preserve = "single"), 
+    width = 0.2
+    ) +
+  scale_y_continuous(breaks = c(seq(0, 600, 200), d_1l.0$n), limits = c(NA, 700)) + 
+  scale_fill_grey(start = 0.3, end = 0.8) +
+  labs(y = "MRSS") +
+  theme_minimal(base_size = 12) +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank(), 
+    axis.title.x = element_blank(),
+    legend.title = element_blank()
+  ) +
+  annotate(
+    "text", x = Inf, y = d_1l.0$n, label = "Baseline",
+    size = 3.5, hjust = 1, vjust = -0.5
+  )
+```
+:::
+:::
+
+Figure 1 shows that adding covariates can substantially reduce the *MRSS*. As detailed in Table 2, entering the point estimates of *R*^2^~Total~ into the power formula results in total sample size requirements of `r describe_range(d_1l, "MRSS", "N", "1-SD")`, `r describe_range(d_1l, "MRSS", "N", "2-BL")`, and `r describe_range(d_1l, "MRSS", "N", "3-SD+BL")`, depending on the assessment method. Using the lower bound estimates of the 95% CI of *R*^2^~Total~, and thus, following a conservative approach, the *MRSS* varies between `r describe_min(d_1l, "MRSS conservative", "N")` and `r describe_max(d_1l, "MRSS conservative", "N")`. In contrast, using the respective upper bound estimates to adopt a rather optimistic liberal approach, the *MRSS* varies between `r describe_min(d_1l, "MRSS liberal", "N")` and `r describe_max(d_1l, "MRSS liberal", "N")`.   
+
+To conclude, if covariates cannot be included, a total of *N* = `r d_1l.0$n` elementary students are necessary to achieve *MDES* = `r es_1l`. However, when covariates are included in the design, the required sample size depends on the team's risk preferences. For example, if they opted for a conservative approach by assessing both sociodemographic characteristics and a pretest, the researchers should recruit at least *N* = `r d_1l %>% filter(Set == "3-SD+BL", Method == "Student") %>% pull("MRSS conservative")`/`r d_1l %>% filter(Set == "3-SD+BL", Method == "Parent") %>% pull("MRSS conservative")` students to adequately power their IRT to detect *SMD* = `r es_1l` based on student self-reports/parent ratings. 
+
+
+
+## Scenario 2: CRT
+
+:::{.scenario-subtitle}
+A field three-level CRT on enjoyment of learning among Grade 4 students
+:::
+
+The research team found that their intervention improved 4th graders' self-reported enjoyment of learning with *SMD* = 0.22. The team plans a large-scale trial to evaluate whether the intervention is also effective when implemented by teachers in regular classroom settings. To avoid unintentionally exposing the control group to the intervention, the researchers want to carry out a three-level cluster-randomized trial, where whole schools will be randomized to experimental conditions. 80 schools will participate in the study. From each of these schools, the team intends to sample 2 classrooms, with 20 students per classroom. Given this sample size, the researchers want to determine whether their CRT achieves *MDES* = 0.22 (with 1-β = .80 and α = .05 in a two-tailed test). Since the intervention targets a specific measure, the team enters the point estimates for the design parameters into their power calculations.  
+Again, the researchers allow for the statistical uncertainty associated with the estimated design parameters. They determine conservative upper/liberal lower bound estimates for the *MDES* by drawing on the respective upper/lower bounds of the 95% CIs of the ICCs and the respective lower/upper bounds of the 95% CIs of the *R*^2^ values. 
+
+```{r}
+# set the sample size
+n_3l = 20           # Number of students per classroom
+J_3l = 2            # Number of classrooms per school
+K_3l = 80           # Number of schools
+```
+
+
+
+```{r}
+# load point estimates
+load("../data/dp_pe.pub.rda")
+```
+
+
+```{r}
+dp_3l <- dp_pe %>% 
+  # select relevant design parameters
+  filter(Population == "Total",
+         Design == "3L-D",
+         Edu.level == "Elementary",
+         Grade == 4,
+         Method == "Student",
+         Measure == "Enjoyment of learning") %>% 
+  
+  # calculate 95% CIs 
+  mutate(CI.lb = Estimate - 1.96*SE,
+         CI.ub = Estimate + 1.96*SE) %>% 
+  
+  # truncate to [0,1], if necessary
+  mutate(across(starts_with("CI"), ~ pmax(0, pmin(1, .)))) %>% 
+  
+  # select relevant columns
+  select(Set, n_Covariates, Parameter, Estimate, starts_with("CI"))
+```
+
+Table 3 shows all design parameters applied in the power analyses.
+```{r}
+#| code-fold: true
+#| label: tbl-dp_3l
+#| tbl-cap: Design Parameters for Scenario 2
+# inspect selected design parameters
+kable(dp_3l %>% 
+        mutate(across(c(Estimate, starts_with("CI")), ~sprintf("%.2f", .))))
+```
+
+#### Baseline Design without Covariates
+
+Again, in a first setup, the research team considers a design without covariates.  
+
+```{r}
+# point estimates
+mdes.cra3(
+  power=.80,         # Power; default: 80%
+  alpha=.05,         # Probability of Type I error; default: 5% 
+  two.tailed=TRUE,   # Hypothesis test; default: two-tailed
+  p=.50,             # Proportion of students in the treatment group; default: 50%
+  rho2 = .08,        # Between-classroom differences (ICC_Classroom)
+  rho3 = .05,        # Between-school differences (ICC_School)
+  g3=0,              # Number of covariates; default: 0
+  r21=0,             # Proportion of explained variance by covariates at the student level (R2_Student); default: 0
+  r22=0,             # Proportion of explained variance by covariates at the classroom level (R2_Classroom); default: 0
+  r23=0,             # Proportion of explained variance by covariates at the school level (R2_School); default: 0
+  n = n_3l,          # Number of students per classroom
+  J = J_3l,          # Number of classrooms per school
+  K = K_3l           # Number of schools
+  )
+
+# ICCs: upper bound of the 95% CIs = conservative
+mdes.cra3(rho2 = .12, rho3 = .08, n = n_3l, J = J_3l, K = K_3l)
+
+# ICCs: lower bound of the 95% CIs = liberal
+mdes.cra3(rho2 = .03, rho3 = .02, n = n_3l, J = J_3l, K = K_3l)
+```
+
+```{r}
+#| echo: false
+#| output: false
+
+d_3l.0 <- mdes.cra3(rho2 = .08, rho3 = .05, n = n_3l, J = J_3l, K = K_3l)   
+d_3l.0c <- mdes.cra3(rho2 = .12, rho3 = .08, n = n_3l, J = J_3l, K = K_3l)
+d_3l.0l <- mdes.cra3(rho2 = .03, rho3 = .02, n = n_3l, J = J_3l, K = K_3l)
+```
+
+When not using covariates, the *MDES* equals `{r} round(d_3l.0$mdes[1], 2)` with the point estimates, `{r} round(d_3l.0c$mdes[1], 2)` with the upper bound estimates of the 95% CIs, and `{r} round(d_3l.0l$mdes[1], 2)` with the lower bound estimates of the 95% CIs of the ICCs. Consequently, *K* = `{r} K_3l` schools would suffice to achieve an *MDES* of 0.22---provided the researchers adopt a liberal (but potentially risky) approach to power analysis. To ensure the robustness of the design, they proceed to systematically examine how different covariate sets influence the *MDES*.
+
+
+```{r}
+#| warning: false 
+# prepare database
+dp_3l <- dp_3l %>% 
+  pivot_longer(c(Estimate:CI.ub), 
+               names_to = "statistic", values_to = "r2") %>%
+  pivot_wider(names_from = Parameter, values_from = r2) %>% 
+
+# ICC: upper bound of the 95% CI + R2: lower bound of the 95% CI = conservative
+# ICC: lower bound of the 95% CI + R2: upper bound of the 95% CI = liberal
+  mutate(approach = case_when(
+    statistic == "Estimate" ~ "MDES",
+    Set == "0" & statistic == "CI.lb" ~ "MDES liberal",
+    Set == "0" & statistic == "CI.ub" ~ "MDES conservative",
+    Set != "0" & statistic == "CI.lb" ~ "MDES conservative",
+    Set != "0" & statistic == "CI.ub" ~ "MDES liberal"))
+
+# extract ICCs
+icc <- dp_3l %>% 
+  filter(Set == "0") %>% 
+  select(approach, starts_with("ICC"))
+
+dp_3l <- dp_3l %>% 
+  # fill in ICCs for covariate model sets
+  left_join(icc, by = "approach", suffix = c("_", "")) %>% 
+  select(Set, n_Covariates, approach, starts_with("ICC"), starts_with("R2"), -ends_with("_")) %>% 
+  # remove Model Set 0
+  filter(Set != "0")
+```
+
+
+```{r}
+#| warning: false 
+#| output: false
+
+# custom function to vectorize PowerUpR::mdes.cra3() across varying model sets
+vectorize_mdes.cra3 <- function(rho2, rho3, g3, r21, r22, r23, ...) {
+  parms <- list(
+    rho2 = rho2, rho3 = rho3,           
+    g3 = g3, 
+    r21 = r21, r22 = r22, r23 = r23,
+    n = n_3l, J = J_3l, K = K_3l
+  )
+  d_out <- exec(getFromNamespace("mdes.cra3", ns = "PowerUpR"), !!!parms)
+  d_out$mdes[1]
+}
+
+# apply vectorize_mdes.cra3()
+d_3l <- dp_3l %>% 
+  mutate(mdes = pmap_dbl(
+    list(
+      ICC_Classroom, ICC_School, n_Covariates, R2_Student, R2_Classroom, R2_School
+      ), 
+    vectorize_mdes.cra3))
+```
+
+```{r}
+# clean and reshape results
+d_3l <- d_3l %>% 
+  select(-starts_with(c("ICC", "R2"))) %>% 
+  pivot_wider(names_from = approach, values_from = mdes)
+```
+
+
+
+Table 4 lists the results; Figure 2 visualizes them.
+
+::: {.grid style="gap: 4rem;"}
+::: {.g-col-6}
+
+```{r}
+#| code-fold: true
+#| label: tbl-d_3l
+#| tbl-cap: MDES for Different Covariate Sets
+# show results
+kable(d_3l %>% 
+        mutate(across(contains("MDES"), ~sprintf("%.2f", .))))
+```
+:::
+::: {.g-col-6}
+
+```{r}
+#| code-fold: true
+#| label: fig-d_3l
+#| fig-cap: MDES (with conservative/liberal bounds) for Different Covariate Sets
+#| cap-location: top
+#| fig-height: 1.6
+ggplot(d_3l, aes(x = Set, y = `MDES`)) +
+  geom_hline(yintercept = es_1l, linetype = "dashed") + 
+  geom_segment(aes(xend = Set, y = 0, yend = `MDES`), color = "grey70", linewidth = 1.5) +
+  geom_point(aes(y = `MDES`), size = 4, color = "black", fill = "darkgrey", shape = 21) +
+  geom_errorbar(
+    aes(ymin = `MDES conservative`, ymax = `MDES liberal`),
+    width = 0.2
+  ) +
+  labs(y = "MDES") +
+  theme_minimal(base_size = 13) +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank(),
+        axis.title.x = element_blank(),
+    legend.title = element_blank()
+  )  +
+  annotate(
+    "text", x = Inf, y = es_1l, label = "Target",
+    size = 3.5, hjust = 1, vjust = -0.5
+  )
+```
+:::
+:::
+
+Figure 2 illustrates that covariates can indeed lower the *MDES*. Table 4 shows that by applying the point estimates, `r describe_range(d_3l, "MDES", "MDES")`, depending on the covariate set. Entering the upper bound estimates of the 95% CIs of the ICCs plus the lower bound estimates of the 95% CIs of the *R*^2^s under a conservative approach, the *MDES* varies between `r describe_min(d_3l, "MDES conservative", "MDES", ref=FALSE)` and `r describe_max(d_3l, "MDES conservative", "MDES", ref=FALSE)`. In contrast, using the respective the lower bound estimates of the 95% CIs of the ICCs in combination with the upper bound estimates of the 95% CIs of *R*^2^s under a liberal approach, the *MDES* varies between `r describe_min(d_3l, "MDES liberal", "MDES", ref=FALSE)` and `r describe_max(d_3l, "MDES liberal", "MDES", ref=FALSE)`. 
+
+In summary, with a fixed maximum of *K* = `r K_3l` schools in total, the research team should at least consider adding a baseline measure, hence, to pretest students' enjoyment of learning, given statistical uncertainty. If doing so, the researchers can be confident that the sample size of their CRT will be large enough to detect *SMD* = `r es_1l` based on student self-reports.
+
+

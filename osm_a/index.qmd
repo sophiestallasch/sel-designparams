@@ -1,0 +1,41 @@
+---
+title: "OSM A: Materials and Methods"
+excerpt: Materials and Methods
+execute:
+  freeze: true
+engine: knitr 
+resources:
+  - "MD2-S2_DP-SEL_OSM-A.pdf"
+osm_a:
+  pdf: "MD2-S2_DP-SEL_OSM-A.pdf"
+---
+
+```{css echo=FALSE}
+.embed-container {
+    position: relative;
+    padding-bottom: 129%;
+    height: 0;
+    overflow: hidden;
+    max-width: 100%;
+}
+.embed-container iframe,
+.embed-container object,
+.embed-container embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+```
+
+```{=html}
+<p class="text-center" style="margin-bottom: 1em;">
+  <a class="dt-button" href="`r rmarkdown::metadata$osm_a$pdf`" target="_blank">
+    <i class="fa-solid fa-file-arrow-down"></i>&ensp;Download
+  </a>
+</p>
+<div class="embed-container">
+  <iframe src="`r rmarkdown::metadata$osm_a$pdf`#toolbar=0" style="border: 0.5px;width: 100%;"></iframe>
+</div>
+```

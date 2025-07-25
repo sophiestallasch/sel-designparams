@@ -1,0 +1,30 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Design Parameters for Socio-Emotional Learning Outcomes"
+  navbar:
+    left:
+      - href: dp/index.qmd
+        text: Database
+      - href: osm_a/index.qmd
+        text: OSM A
+      - href: osm_b/index.qmd
+        text: OSM B
+  page-footer: 
+    left: "&#169; 2025 The authors"
+
+format:
+  html:
+    page-layout: full
+    grid:
+      body-width: 1300px
+    toc: true
+    theme:
+      - cosmo
+    highlight-style: pygments
+    css: styles.css
+
+bibliography: references.bib
+csl: ./apa.csl

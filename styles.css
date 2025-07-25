@@ -1,0 +1,90 @@
+/* css styles */
+
+
+/* PAGE LAYOUT */
+
+figure.quarto-float-tbl figcaption.quarto-float-caption-top {
+  text-align: left;
+}
+
+figcaption {
+  margin: auto;
+  text-align: left;
+}
+
+.dt-button {
+  display: inline-block;
+  padding: 4px 12px;
+  margin: 2px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #111;
+  background: linear-gradient(to bottom, #f9f9f9 0%, #e0e0e0 100%);
+  border: 1px solid #aaa;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  box-shadow: inset 0 1px 0 #fff;
+}
+
+.dt-button:hover {
+  background: linear-gradient(to bottom, #e9e9e9 0%, #d0d0d0 100%);
+  border-color: #888;
+  color: #000;
+}
+
+.table-note {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+
+.scenario-subtitle {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 0em;
+  margin-bottom: 1em;
+}
+
+/* DATATABLE LAYOUT */
+
+.first-fixed-column {
+  border-left: 1px solid #bbbbbb !important;
+}
+
+.fixed-column {
+  filter: brightness(95%) !important;
+}
+
+td.nowrap {
+  white-space: nowrap !important;
+}
+
+
+/* TABLE NOTES LAYOUT */
+
+table.tg {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.875em; /* ca. 2px kleiner als Standard */
+}
+
+table.tg th,
+table.tg td {
+  padding: 6px 8px;
+  text-align: left;
+  vertical-align: top;
+  border: none;
+  border-bottom: 1px solid #d0d0d0;
+}
+
+table.tg thead tr:first-child th {
+  border-top: 1px solid #d0d0d0;
+}
+
+table.tg .section-heading {
+  font-weight: bold;
+}

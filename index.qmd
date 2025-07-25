@@ -1,0 +1,10 @@
+---
+title: "Database and Online Supplemental Material"
+subtitle: "Empowering Randomized Intervention Studies on Students’ Socio-Emotional Learning Outcomes: A Database of Design Parameters for Power Analysis"
+---
+
+[Database of Design Parameters](dp/index.qmd)  
+
+[OSM A: Materials and Methods](osm_a/index.qmd)  
+
+[OSM B: Application](osm_b/index.qmd)

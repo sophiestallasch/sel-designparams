@@ -1,0 +1,269 @@
+---
+title: "Database of Design Parameters"
+---
+
+To support power analyses for single-level and multilevel randomized intervention studies on SEL outcomes, we have generated a comprehensive database that includes (a) point estimates and (b) meta-analytic summaries of design parameters. As discussed in the Data Note, we recommend aligning the design parameters with the key characteristics of the target intervention. This involves considering:
+
+* the target population (total/overall, academic track, non-academic track student population);
+* the target experimental design (single-level, two-level, three-level design);
+* the target education level (elementary, lower secondary, upper secondary education);
+* the target grade (grades 1 to 13);
+* the target assessment method of the SEL outcome (student self-report, parent rating, teacher rating);
+* the target domain (self-, other-, task-orientation);
+* the target context (school-related subject-specific/whole-school academic, general); and
+* the target measure.
+
+Importantly, if the target measure or other characteristics of the planned study (e.g., the target grade) do not align well with the characteristics of the samples used to estimate the current design parameters, or if the available point estimates have large standard errors, we recommend utilizing the meta-analytic summaries of the design parameters that most closely reflect the target intervention.
+
+To select the design parameters or their meta-analytic summaries from the tables below, researchers can use the interactive filter functions or adapt the R code provided in OSM B. 
+
+
+
+
+
+
+```{r}
+#| output: false
+#| echo: false
+library(tidyverse)
+library(DT)
+```
+
+```{r}
+#| echo: false
+load("../data/dp_pe.pub.rda")
+load("../data/dp_ma.pub.rda")
+```
+
+
+</br></br>
+
+## Point Estimates
+
+```{r}
+#| echo: false
+datatable(
+  dp_pe,
+  filter = "bottom",
+  extensions = c('Buttons', 'Select', 'SearchPanes', 'FixedColumns'),
+  options = list(
+    autoWidth = TRUE,
+    dom = 'lfPrtipB',
+    buttons = c('copy', 'csv', 'excel', 'print'),
+    pageLength = 10,
+    columnDefs = list(
+      list(searchPanes = list(show = TRUE), targets = c(0:7)),
+      list(searchPanes = list(show = FALSE), targets = "_all"), 
+      list(className = 'first-fixed-column', targets = 17),
+      list(className = 'fixed-column', targets = 17:20),
+      list(className = 'nowrap', targets = "_all")
+    ), 
+    fixedColumns = list(leftColumns = 0, rightColumns = 4), 
+    deferRender = TRUE
+  ),
+  selection = 'none',
+  rownames = FALSE
+) %>% 
+  formatRound(columns = c("Reliability", "Estimate", "SE"), digits = 2)
+```
+
+
+</br></br>
+
+
+## Meta-Analytic Summaries
+
+```{r}
+#| echo: false
+datatable(
+  dp_ma,
+  filter = "bottom",
+  extensions = c('Buttons', 'Select', 'SearchPanes', 'FixedColumns'),
+  options = list(
+    autoWidth = TRUE,
+    dom = 'lfPrtipB',
+    buttons = c('copy', 'csv', 'excel', 'print'),
+    pageLength = 10,
+    columnDefs = list(
+      list(searchPanes = list(show = TRUE), targets = c(0:6, 12)),
+      list(searchPanes = list(show = FALSE), targets = "_all"),
+      list(className = 'first-fixed-column', targets = 16),
+      list(className = 'fixed-column', targets = 16:23),
+      list(className = 'nowrap', targets = "_all")
+    ), 
+    fixedColumns = list(leftColumns = 0, rightColumns = 8), 
+    scrollX = TRUE,
+    deferRender = TRUE
+  ),
+  selection = 'none',
+  rownames = FALSE
+) %>% 
+  formatRound(columns = c("I2_Total", "I2_Within", "I2_Between",
+                          "Average", "SE", 
+                          "CI.lb", "CI.ub",
+                          "PI.lb", "PI.ub"), 
+              digits = 2) %>% 
+  formatRound(columns = c("Tau2_Within", "Tau2_Between"), digits = 3)
+```
+
+
+</br></br>
+
+:::{.table-note}
+Table Notes
+:::
+
+<details>
+<summary>Show notes</summary>
+
+```{=html}
+<table class="tg">
+  <thead>
+    <tr>
+      <th colspan="3" class="section-heading">Key characteristics</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowspan="3">Population</td>
+      <td rowspan="3">Population</td>
+      <td>Total = Total student population (overall; all school types)</td>
+    </tr>
+    <tr><td>Academic = Academic track student population ("Gymnasium")</td></tr>
+    <tr><td>Non-academic = Non-academic track student population (other school types)</td></tr>
+
+    <tr>
+      <td rowspan="3">Design</td>
+      <td rowspan="3">Experimental design</td>
+      <td>1L-D = Single-level design (individual students independently sampled)</td>
+    </tr>
+    <tr><td>2L-D = Two-level design (students within schools)</td></tr>
+    <tr><td>3L-D = Three-level design (students within classrooms within schools)</td></tr>
+
+    <tr>
+      <td rowspan="3">Edu.level</td>
+      <td rowspan="3">Education level</td>
+      <td>Elementary = Elementary education (grades 1–4)</td>
+    </tr>
+    <tr><td>Lower secondary = Lower secondary education (grades 5–10)</td></tr>
+    <tr><td>Upper secondary = Upper secondary education (grades 11–13)</td></tr>
+
+    <tr>
+      <td rowspan="3">Method</td>
+      <td rowspan="3">Assessment method</td>
+      <td>Student = Student self-report</td>
+    </tr>
+    <tr><td>Parent = Parent rating</td></tr>
+    <tr><td>Teacher = Teacher rating</td></tr>
+
+    <tr>
+      <td rowspan="3">Domain</td>
+      <td rowspan="3">SEL domain</td>
+      <td>Self = Self-orientation</td>
+    </tr>
+    <tr><td>Other = Other-orientation</td></tr>
+    <tr><td>Task = Task-orientation</td></tr>
+
+    <tr>
+      <td rowspan="3">Context</td>
+      <td rowspan="3">SEL context</td>
+      <td>Mathematics/Science/ICT/Verbal: German/English = School-related: subject-specific</td>
+    </tr>
+    <tr><td>School = School-related: whole-school academic</td></tr>
+    <tr><td>General = General, context-independent</td></tr>
+
+    <tr>
+      <td>Measure</td>
+      <td>Outcome measure</td>
+      <td>Several, depends on the context</td>
+    </tr>
+
+    <tr><td>Grade</td><td>Grade</td><td>Grades 1 to 13</td></tr>
+
+    <tr>
+      <td rowspan="3">Type</td>
+      <td rowspan="3">Type of meta-analysis</td>
+      <td>MA-1 = Across domains and contexts</td>
+    </tr>
+    <tr><td>MA-2 = Within domains, across contexts</td></tr>
+    <tr><td>MA-3 = Within domains and contexts</td></tr>
+
+    <tr>
+      <td rowspan="4">Set</td>
+      <td rowspan="4">Model set</td>
+      <td>0 = No covariate adjustment ("empty")</td>
+    </tr>
+    <tr><td>1-SD = Adjusted for sociodemographic characteristics</td></tr>
+    <tr><td>2-BL = Adjusted for baseline measure of the outcome</td></tr>
+    <tr><td>3-SD+BL = Adjusted for both</td></tr>
+
+    <tr>
+      <td colspan="3" class="section-heading">Key statistics</td>
+    </tr>
+
+    <tr>
+      <td rowspan="6">Parameter</td>
+      <td rowspan="6">Design parameter</td>
+      <td>icc_l2 = Intraclass correlation at classroom level (ρ<sub>Classroom</sub>)</td>
+    </tr>
+    <tr><td>icc_l3 = Intraclass correlation at school level (ρ<sub>School</sub>)</td></tr>
+    <tr><td>r2_l1 = Explained variance at student level (<em>R</em>²<sub>Student</sub>)</td></tr>
+    <tr><td>r2_l2 = Explained variance at classroom level (<em>R</em>²<sub>Classroom</sub>)</td></tr>
+    <tr><td>r2_l3 = Explained variance at school level (<em>R</em>²<sub>School</sub>)</td></tr>
+    <tr><td>r2_t = Total explained variance across all students (<em>R</em>²<sub>Total</sub>; 1L-D only)</td></tr>
+
+    <tr><td>Estimate</td><td>Point estimate</td><td></td></tr>
+    <tr><td>Average</td><td>Meta-analytic average</td><td></td></tr>
+    <tr><td>SE</td><td>Standard error</td><td></td></tr>
+
+    <tr>
+      <td colspan="3" class="section-heading">Further information</td>
+    </tr>
+
+    <tr>
+      <td rowspan="9">Sample</td>
+      <td rowspan="9">Probability sample</td>
+      <td>DESI = Assessment of Student Achievements in German and English as a Foreign Language</td>
+    </tr>
+    <tr><td>IQB Trends = IQB Trends in Student Achievement 2016</td></tr>
+    <tr><td>PISA 2003 = Programme for International Student Assessment, 2003 cycle</td></tr>
+    <tr><td>PISA 2006 = Programme for International Student Assessment, 2006 cycle</td></tr>
+    <tr><td>PISA 2009 = Programme for International Student Assessment, 2009 cycle</td></tr>
+    <tr><td>PISA 2012 = Programme for International Student Assessment, 2012 cycle</td></tr>
+    <tr><td>NEPS-SC2 = National Educational Panel Study, starting cohort 2&mdash;kindergarten</td></tr>
+    <tr><td>NEPS-SC3 = National Educational Panel Study, starting cohort 3&mdash;grade 5</td></tr>
+    <tr><td>NEPS-SC4 = National Educational Panel Study, starting cohort 4&mdash;grade 9</td></tr>
+
+    <tr><td>Wave</td><td>Assessment wave</td><td></td></tr>
+    <tr><td>Lag</td><td>Time lag (months)</td><td></td></tr>
+    <tr><td>Variable</td><td>Outcome variable</td><td></td></tr>
+    <tr><td>Reliability</td><td>Outcome reliability</td><td></td></tr>
+    <tr><td>n_Students</td><td>Number of students</td><td></td></tr>
+    <tr><td>n_Classrooms</td><td>Number of classrooms</td><td></td></tr>
+    <tr><td>n_Schools</td><td>Number of schools</td><td></td></tr>
+    <tr><td>n_Covariates</td><td>Number of covariates</td><td></td></tr>
+    <tr><td>k</td><td>Observed design parameters</td><td></td></tr>
+    <tr><td>J</td><td>Number of samples</td><td></td></tr>
+
+    <tr>
+      <td rowspan="2">Fit.method</td>
+      <td rowspan="2">Fitting method</td>
+      <td>FE = Fixed-effect model</td>
+    </tr>
+    <tr><td>REML = Random-effects model</td></tr>
+
+    <tr><td>CI.lb</td><td>95% Confidence interval: lower bound</td><td></td></tr>
+    <tr><td>CI.ub</td><td>95% Confidence interval: upper bound</td><td></td></tr>
+    <tr><td>PI.lb</td><td>Prediction interval: lower bound</td><td>(REML only)</td></tr>
+    <tr><td>PI.ub</td><td>Prediction interval: upper bound</td><td>(REML only)</td></tr>
+
+    <tr><td>Tau2_Within</td><td>Within-sample heterogeneity</td><td>(τ²<sub>Within</sub>; REML only)</td></tr>
+    <tr><td>Tau2_Between</td><td>Between-sample heterogeneity</td><td>(τ²<sub>Between</sub>; REML only)</td></tr>
+    <tr><td>I2_Total</td><td><em>I</em>² statistics: total</td><td>(<em>I</em>²<sub>Total</sub>; REML only)</td></tr>
+    <tr><td>I2_Within</td><td><em>I</em>² statistics: within samples</td><td>(<em>I</em>²<sub>Within</sub>; REML only)</td></tr>
+    <tr><td>I2_Between</td><td><em>I</em>² statistics: between samples</td><td>(<em>I</em>²<sub>Between</sub>; REML only)</td></tr>
+  </tbody>
+</table>
+```
+
+</details>

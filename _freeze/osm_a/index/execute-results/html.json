@@ -1,0 +1,15 @@
+{
+  "hash": "00af6f124c90e4c94c02c5ed667f2b1d",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"OSM A: Materials and Methods\"\nexcerpt: Materials and Methods\nexecute:\n  freeze: true\nengine: knitr \nresources:\n  - \"MD2-S2_DP-SEL_OSM-A.pdf\"\nosm_a:\n  pdf: \"MD2-S2_DP-SEL_OSM-A.pdf\"\n---\n\n\n::: {.cell}\n<style type=\"text/css\">\n.embed-container {\n    position: relative;\n    padding-bottom: 129%;\n    height: 0;\n    overflow: hidden;\n    max-width: 100%;\n}\n.embed-container iframe,\n.embed-container object,\n.embed-container embed {\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%;\n}\n</style>\n:::\n\n\n```{=html}\n<p class=\"text-center\" style=\"margin-bottom: 1em;\">\n  <a class=\"dt-button\" href=\"MD2-S2_DP-SEL_OSM-A.pdf\" target=\"_blank\">\n    <i class=\"fa-solid fa-file-arrow-down\"></i>&ensp;Download\n  </a>\n</p>\n<div class=\"embed-container\">\n  <iframe src=\"MD2-S2_DP-SEL_OSM-A.pdf#toolbar=0\" style=\"border: 0.5px;width: 100%;\"></iframe>\n</div>\n```\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
