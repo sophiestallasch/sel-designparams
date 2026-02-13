@@ -16,7 +16,7 @@ figcaption {
   display: inline-block;
   padding: 4px 12px;
   margin: 2px;
-  font-size: 13px;
+  font-size: 16px;
   line-height: 1.5;
   color: #111;
   background: linear-gradient(to bottom, #f9f9f9 0%, #e0e0e0 100%);
@@ -42,11 +42,33 @@ figcaption {
   margin-bottom: 0.5em;
 }
 
+.scenario-header {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
 .scenario-subtitle {
   font-size: 1.2rem;
   font-weight: bold;
-  margin-top: 0em;
-  margin-bottom: 1em;
+}
+
+.scenario-question {
+  font-size: 1rem;
+  font-style: italic;
+}
+
+.scenario-subtitle > p {
+  margin-bottom: 0;
+}
+
+.scenario-question > p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.cell-output-stdout pre {
+/*  background-color: #f1f3f5; */
+  border: 1px solid #eeeeee;
 }
 
 /* DATATABLE LAYOUT */
