@@ -7,11 +7,11 @@ website:
   navbar:
     left:
       - href: dp/index.qmd
-        text: Database
+        text: Database of Design Parameters
       - href: osm_a/index.qmd
-        text: OSM A
+        text: "OSM A: Materials and Methods"
       - href: osm_b/index.qmd
-        text: OSM B
+        text: "OSM B: R Application Demo"
   page-footer: 
     left: "&#169; 2025 The authors"
 

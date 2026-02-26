@@ -7,4 +7,4 @@ subtitle: "Empowering Randomized Intervention Studies on Students’ Socio-Emoti
 
 [OSM A: Materials and Methods](osm_a/index.qmd)  
 
-[OSM B: Application](osm_b/index.qmd)
+[OSM B: R Application Demo](osm_b/index.qmd)
