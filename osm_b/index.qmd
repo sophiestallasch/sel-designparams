@@ -1,5 +1,5 @@
 ---
-title: "OSM B: Application"
+title: "OSM B: R Application Demo"
 ---
 
 
@@ -762,28 +762,28 @@ Overall, the research team learns that the maximally feasible sample size of *K*
 
 :::{.scenario-header}
 :::{.scenario-subtitle}
-A field three-level MSCRT on problem behavior in non-academic lower secondary schools
+A field three-level MSCRT on peer relationships in non-academic lower secondary schools
 :::
 :::{.scenario-question}
 <i class="bi bi-arrow-right-short"></i> How many schools are required?
 :::
 :::
 
-A research team is commissioned by policymakers to evaluate the effectiveness of a newly developed program aimed at reducing problem behaviors—such as violence and bullying—among students in Grades 5 to 10 attending the non-academic track of lower secondary education. Because the intervention targets classroom-level peer processes, the team plans a three-level MSCRT randomizing intact classrooms within schools.
+A research team is commissioned by policymakers to evaluate the effectiveness of a newly developed program aimed at strengthening peer relationships among students in Grades 5 to 10 attending the non-academic track of lower secondary education. Because the intervention targets classroom-level peer processes, the team plans a three-level MSCRT randomizing intact classrooms within schools.
 
-The policymakers indicate that they would support a regular implementation of the program only if its effects are at least comparable to those typically achieved by existing similar interventions. Accordingly, the research team defines a minimum relevant effect size of *MRES* = 0.16, corresponding to the average standardized mean difference reported for interventions targeting externalizing behaviors in the meta-analysis by Cipriano et al. [-@ciprianoStateEvidenceSocial2023, Table 3].
+The policymakers indicate that they would support a regular implementation of the program only if its effects are at least comparable to those typically achieved by existing similar interventions. Accordingly, the research team defines a minimum relevant effect size of *MRES* = 0.22, corresponding to the average standardized mean difference reported for interventions targeting peer relationships in the meta-analysis by Cipriano et al. [-@ciprianoStateEvidenceSocial2023, Table 3].
 
-In line with common organizational structures in lower secondary schools, the team plans to sample at least 4 classrooms per school, with 20 students per classroom. To improve statistical precision, the analyses will adjust for students’ sociodemographic characteristics.
+In line with common organizational structures in lower secondary schools, the team plans to sample at least 4 classrooms per school, with 20 students per classroom. The students will be post-tested after completion of the program. To improve statistical precision, the analyses will adjust for students’ sociodemographic characteristics.
 
-To inform the power analyses, the researchers draw on the meta-analytically summarized design parameters for other-oriented SEL domains in a general context from MA-3. To explicitly account for uncertainty in these design parameters, they additionally incorporate the 95% CIs and 95% PIs into their calculations. Specifically, they consider a pessimistic planning scenario by combining the respective upper bounds for ICCs with the lower bounds of the *R*^2^ values. Moreover, the team assumes a moderate degree of cross-school treatment effect heterogeneity, setting the effect size variability to τ² = 0.15² [@weissHowMuchEffects2017]. Further, they assume that school-level sociodemographics can explain a substantial share of this heterogeneity [see @schochetUnderstandingVariationTreatment2014; @weissConceptualFrameworkStudying2014], amounting to approximately half of the variance in between-school differences in other-oriented outcome measures accounted for by these covariates.
+To inform the power analyses, the researchers draw on the meta-analytically summarized design parameters for other-oriented SEL domains in a general context from MA-3. To explicitly account for uncertainty in these design parameters, they additionally incorporate the 95% CIs and 95% PIs into their calculations. Specifically, they consider a pessimistic planning scenario by combining the respective upper bounds for ICCs with the lower bounds of the *R*^2^ values. Moreover, the team assumes a moderate degree of cross-school treatment effect heterogeneity, setting the effect size variability to τ² = 0.15² [@weissHowMuchEffects2017]. Further, they assume that school-level sociodemographics can explain a substantial share of this heterogeneity [see @schochetUnderstandingVariationTreatment2014; @weissConceptualFrameworkStudying2014], amounting to approximately half of the variance in between-school differences in other-oriented general-context outcome measures accounted for by these covariates.
 
-In applied school settings, perfectly balanced treatment allocation at the classroom level is often difficult to achieve. Practical constraints, differential opportunities for program implementation, and ethical considerations may result in unequal proportions of classrooms assigned to the treatment and control conditions. To reflect this realistic planning uncertainty, the research team conducts sensitivity analyses across varying treatment allocation proportions in the range of 0.50 ≤ *P* ≤ 0.90. The goal of these power analyses is to determine the minimum required number of schools needed to ensure sufficient statistical power (1-β = 0.80) to detect the policy-relevant MRES of 0.16 (with α = 0.05 in a two-tailed test), even under substantial treatment allocation imbalance.
+In applied school settings, perfectly balanced treatment allocation at the classroom level is often difficult to achieve. Practical constraints, differential opportunities for program implementation, and ethical considerations may result in unequal proportions of classrooms assigned to the treatment and control conditions. To reflect this realistic planning uncertainty, the research team conducts sensitivity analyses across varying treatment allocation proportions in the range of 0.50 ≤ *P* ≤ 0.90. The goal of these power analyses is to determine the minimum required number of schools needed to ensure sufficient statistical power (1-β = 0.80) to detect the policy-relevant *MRES* of 0.22 (with α = 0.05 in a two-tailed test), even under substantial treatment allocation imbalance.
 
 
 
 ```{r}
 # set the MRES
-es.s4 <- .16
+es.s4 <- .22
 ```
 
 ```{r}
@@ -934,7 +934,7 @@ ggplot(aes(x = P.s4)) +
   geom_line(aes(y = Average, color = "Average"), linewidth = 0.5) + 
   geom_point(aes(y = Average, color = "Average")) +
   
-  scale_y_continuous(breaks = seq(20, 90, 10), limits = c(20, 90)) +
+  scale_y_continuous(breaks = seq(15, 45, 10), limits = c(15, 45)) +
   scale_color_manual(values = c("Average" = "#4D4D4D")) +
   scale_fill_manual(values = c("95% CI" = "#9C9C9C", "95% PI" = "#CCCCCC"),
                     breaks = c("95% PI", "95% CI")) +
@@ -953,9 +953,9 @@ ggplot(aes(x = P.s4)) +
 :::
 
 
-As shown in Table 8, across allocation proportions, the *MRSS* ranges between `r describe_range(d.s4, "Average", stat = "K")` schools when using the meta-analytic average design parameters, between `r describe_range(d.s4, "95% CI (conservative)", stat = "K")` schools when relying on conservative 95% CI bounds, and between `r describe_range(d.s4, "95% PI (conservative)", stat = "K")` schools when adopting the most pessimistic assumptions based on 95% PI bounds. Under mild imbalance (*P* = .60), the required number of schools equals *K* = `r pull_inline(d.s4, "Average", P == .60)` when using the meta-analytic averages. This requirement increases to *K* = `r pull_inline(d.s4, "95% CI (conservative)", P == .60)` schools when using 95% CI bounds and to *K* = `r pull_inline(d.s4, "95% PI (conservative)", P == .60)` schools when relying on 95% PI bounds. Under strong imbalance (*P* = .80), the *MRSS* correspondingly rises to *K* = `r pull_inline(d.s4, "Average", P == .80)`/`r pull_inline(d.s4, "95% CI (conservative)", P == .80)`/`r pull_inline(d.s4, "95% PI (conservative)", P == .80)` schools.
+As shown in Table 8, across allocation proportions, the *MRSS* ranges between `r describe_range(d.s4, "Average", stat = "K")` schools when using the meta-analytic average design parameters, between `r describe_range(d.s4, "95% CI (conservative)", stat = "K")` schools when relying on conservative 95% CI bounds, and between `r describe_range(d.s4, "95% PI (conservative)", stat = "K")` schools when adopting the most pessimistic assumptions based on 95% PI bounds. Under mild imbalance (*P* = .60), the required number of schools still equals *K* = `r pull_inline(d.s4, "Average", P == .60)` when using the meta-analytic averages. This requirement increases to *K* = `r pull_inline(d.s4, "95% CI (conservative)", P == .60)` schools when using 95% CI bounds and to *K* = `r pull_inline(d.s4, "95% PI (conservative)", P == .60)` schools when relying on 95% PI bounds. Under strong imbalance (*P* = .80), the *MRSS* correspondingly rises to *K* = `r pull_inline(d.s4, "Average", P == .80)`/`r pull_inline(d.s4, "95% CI (conservative)", P == .80)`/`r pull_inline(d.s4, "95% PI (conservative)", P == .80)` schools.
 
-Figure 4 illustrates that the *MRSS* increases monotonically with growing treatment allocation imbalance in all considered cases. As the allocation proportion departs from a balanced design, increasingly more schools are required to compensate for the resulting loss in statistical efficiency. This increase is modest when relying on the meta-analytic averages, but becomes substantially more pronounced under conservative 95% CI- and 95% PI-based assumptions.
+Figure 4 illustrates that the *MRSS* increases monotonically with growing treatment allocation imbalance in all considered cases. As the allocation proportion departs from a balanced design, increasingly more schools are required to compensate for the resulting loss in statistical efficiency. This increase is substantial when relying on the meta-analytic averages, and becomes even more pronounced under conservative 95% CI- and 95% PI-based assumptions.
 
-To sum up, the results indicate that treatment allocation imbalance can considerably inflate the *MRSS* in the three-level MSCRT on problem behaviors. Planning under realistic degrees of uncertainty therefore necessitates a noticeably larger school sample to ensure that the design is sensitive enough to detect *MRES* = .16, particularly when strong imbalance is anticipated.
+To sum up, the results indicate that treatment allocation imbalance can considerably inflate the *MRSS* in the three-level MSCRT on peer relationships. Planning under realistic degrees of uncertainty therefore necessitates a noticeably larger school sample to ensure that the design is sensitive enough to detect *MRES* = .22, particularly when strong imbalance is anticipated.
 
